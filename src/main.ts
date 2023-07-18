@@ -9,4 +9,3 @@ const onBodyClick = (ev: MouseEvent) => {
 };
 
 document.body.addEventListener('contextmenu', onBodyClick);
-
