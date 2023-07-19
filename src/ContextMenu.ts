@@ -29,8 +29,28 @@ class ContextMenu {
 		this.element.append(this.deleteWindowOption);
 	}
 
-	public open = (clientX: number, clientY: number) => {
+	public open = (clientX: number, clientY: number, target: EventTarget | null) => {
+		if (target instanceof HTMLImageElement) {
+			this.deleteWindowOption.style.display = 'block';
+		} else {
+			this.deleteWindowOption.style.display = 'none';
+		}
 		this.root.append(this.element);
+		
+		const menuWidth = this.element.offsetWidth;
+		const menuHeight = this.element.offsetHeight;
+		
+		const windowWidth = window.innerWidth;
+		const windowHeight = window.innerHeight;
+		
+		if (clientX + menuWidth > windowWidth) {
+			clientX -= menuWidth;
+		}
+		
+		if (clientY + menuHeight > windowHeight) {
+			clientY -= menuHeight;
+		}
+		
 		this.element.style.top = `${clientY}px`;
 		this.element.style.left = `${clientX}px`;
 	}
