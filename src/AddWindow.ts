@@ -9,6 +9,14 @@ class AddWindow {
 		this.image.className = 'img-kipelov'
     this.root.append(this.image);
 	}
+	
+	public addImage = () => {
+	
+	}
+	
+	public deleteImage = () => {
+	
+	}
 }
 
 export default AddWindow;
