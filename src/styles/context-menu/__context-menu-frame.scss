@@ -1,0 +1,13 @@
+@import "src/styles/variables";
+
+.context-menu__frame {
+	position: absolute;
+	padding: 14px;
+	background-color: $primary-context-menu_background;
+	border-radius: 10px;
+	cursor: pointer;
+	border: 1px solid $text-secondary;
+	z-index: 10;
+	left: -50px;
+	user-select: none;
+}

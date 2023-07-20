@@ -1,5 +1,9 @@
+@import './styles/colors.scss';
+@import './styles/context-menu/context-menu.scss';
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;300;400;500;600;700&display=swap');
+
 :root {
-	font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+	font-family: 'Poppins', sans-serif;
 	line-height: 1.5;
 	font-weight: 400;
 
@@ -31,6 +35,8 @@ body {
 	min-height: 100vh;
 	width: 100%;
 	overflow: hidden;
+	font-family: 'Poppins', sans-serif;
+	background-color: white;
 }
 
 h1 {
@@ -67,46 +73,4 @@ h1 {
 	}
 }
 
-.context-menu {
-	position: absolute;
-	padding: 14px;
-	background-color: #4d4d4d;
-	border-radius: 5px;
-	cursor: pointer;
-	border: 1px solid #888888;
-	z-index: 10;
-	left:-50px;
-}
 
-
-.add-window {
-	padding: 5px;
-	font-size: 14px;
-	border-radius: 3px;
-	text-align: center;
-	user-select: none;
-}
-
-.add-window:hover {
-	background-color: #888888;
-}
-
-.delete-window {
-	padding: 5px;
-	font-size: 14px;
-	border-radius: 3px;
-	text-align: center;
-	user-select: none;
-}
-
-.delete-window:hover {
-	background-color: #888888;
-}
-
-.img-kipelov {
-	position: relative;
-	left: 100px;
-	border: 3px solid #888888;
-	border-radius: 10px;
-	margin-left: 10px;
-}
