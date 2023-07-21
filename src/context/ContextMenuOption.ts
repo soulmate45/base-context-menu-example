@@ -8,16 +8,16 @@ class ContextMenuOption {
 		this.component = document.createElement('div');
 		this.postClickEvents=[];
 		this.component.textContent = buttonText;
-		this.component.addEventListener('click', this.onElementClick);
+		this.component.addEventListener('click', this.onComponentClick);
 	}
 	
-	public getElement = () => this.component;
+	public getComponent = () => this.component;
 	
 	public addPostClickEvent = (event: () => void) => {
 		this.postClickEvents.push(event);
 	}
 	
-	private onElementClick = () => {
+	private onComponentClick = () => {
 		this.postClickEvents.forEach(element => {
 			element();
 		});

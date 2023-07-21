@@ -2,9 +2,6 @@
 
 .context-menu__text-component {
 	position: absolute;
-
-	> p {
-		font-size: 14px;
-		color: $primary-text;
-	}
+	font-size: 14px;
+	color: $text-secondary;
 }

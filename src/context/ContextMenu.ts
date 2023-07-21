@@ -4,6 +4,7 @@ import PictureComponent from './components/PictureComponent.ts';
 import TextComponent from './components/TextComponent.ts';
 import ComponentStorage from './components/ComponentStorage.ts';
 import '../styles/context-menu/__context-menu-frame.scss';
+import HTMLGenerator from './HTMLGenerator.ts';
 
 interface ContextMenuProps {
 	rootComponent: HTMLElement,
@@ -27,7 +28,7 @@ class ContextMenu {
 	
 	
 	constructor(props: ContextMenuProps) {
-		this.component = document.createElement('div');
+		this.component = HTMLGenerator.getDiv();
 		this.component.className = this.COMPONENT_CLASS_NAME;
 		this.componentStorage = new ComponentStorage();
 		this.root = props.rootComponent;
@@ -43,9 +44,9 @@ class ContextMenu {
 		this.windowDeleteImageOption.addPostClickEvent(this.onDeleteImageClick);
 		
 		this.component.append(
-			this.windowAddImageOption.getElement(),
-			this.windowAddTextOption.getElement(),
-			this.windowDeleteImageOption.getElement(),
+			this.windowAddImageOption.getComponent(),
+			this.windowAddTextOption.getComponent(),
+			this.windowDeleteImageOption.getComponent(),
 		);
 	}
 
@@ -88,7 +89,7 @@ class ContextMenu {
 		component.style.top = positionY;
 	}
 	
-	private addPictureElement = () => {
+	private addPictureComponent = () => {
 		const pictureComponent = new PictureComponent(this.coords);
 		this.componentStorage.addElement(pictureComponent);
 		const image = pictureComponent.getComponent();
@@ -97,10 +98,10 @@ class ContextMenu {
 	}
 	
 	private onAddImageClick = () => {
-		this.addPictureElement();
+		this.addPictureComponent();
 	}
 	
-	private addTextElement = () => {
+	private addTextComponent = () => {
 		const textComponent = new TextComponent(this.coords);
 		this.componentStorage.addElement(textComponent);
 		const text = textComponent.getComponent();
@@ -109,7 +110,7 @@ class ContextMenu {
 	}
 	
 	private onAddTextClick = () => {
-		this.addTextElement();
+		this.addTextComponent();
 	}
 	
 	private deleteImageElement = () => {
