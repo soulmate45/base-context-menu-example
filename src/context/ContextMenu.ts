@@ -1,12 +1,12 @@
 import ContextMenuOption from './ContextMenuOption.ts';
 import Coordinates from './Coordinates.ts';
-import PictureElement from './elements/PictureElement.ts';
-import TextElement from './elements/TextElement.ts';
-import '../styles/context-menu/__context-menu-frame.scss'
-import ElementStorage from './elements/ElementStorage.ts';
+import PictureComponent from './components/PictureComponent.ts';
+import TextComponent from './components/TextComponent.ts';
+import ComponentStorage from './components/ComponentStorage.ts';
+import '../styles/context-menu/__context-menu-frame.scss';
 
 interface ContextMenuProps {
-	rootElement: HTMLElement,
+	rootComponent: HTMLElement,
 }
 
 class ContextMenu {
@@ -14,21 +14,23 @@ class ContextMenu {
 	private readonly ADD_TEXT_BUTTON = 'Добавить текст'
 	private readonly DELETE_BUTTON = 'Удалить';
 	
+	private readonly COMPONENT_CLASS_NAME = 'context-menu__frame';
+	
 	private readonly root: HTMLElement;
-	private readonly element: HTMLElement;
+	private readonly component: HTMLElement;
 	private readonly windowAddImageOption: ContextMenuOption;
 	private readonly windowAddTextOption: ContextMenuOption;
 	private readonly windowDeleteImageOption: ContextMenuOption;
 	// private readonly windowDeleteTextOption: ContextMenuOption;
-	private readonly elementStorage: ElementStorage;
+	private readonly componentStorage: ComponentStorage;
 	private coords: Coordinates;
 	
 	
 	constructor(props: ContextMenuProps) {
-		this.element = document.createElement('div');
-		this.element.className = 'context-menu__frame';
-		this.elementStorage = new ElementStorage();
-		this.root = props.rootElement;
+		this.component = document.createElement('div');
+		this.component.className = this.COMPONENT_CLASS_NAME;
+		this.componentStorage = new ComponentStorage();
+		this.root = props.rootComponent;
 		this.coords = { x: 0, y: 0 };
 		
 		this.windowAddImageOption = new ContextMenuOption(this.ADD_IMAGE_BUTTON);
@@ -40,7 +42,7 @@ class ContextMenu {
 		this.windowDeleteImageOption = new ContextMenuOption(this.DELETE_BUTTON);
 		this.windowDeleteImageOption.addPostClickEvent(this.onDeleteImageClick);
 		
-		this.element.append(
+		this.component.append(
 			this.windowAddImageOption.getElement(),
 			this.windowAddTextOption.getElement(),
 			this.windowDeleteImageOption.getElement(),
@@ -49,20 +51,19 @@ class ContextMenu {
 
 	public open = (coordsOutput: Coordinates) => {
 		this.coords = coordsOutput;
+		this.root.append(this.component);
 		
 		const position = this.coordinateSearch(coordsOutput);
 		this.setPosition(position);
-		
-		this.root.append(this.element);
 	}
 	
 	public close = () => {
-		this.element.remove();
+		this.component.remove();
 	}
 	
 	private coordinateSearch = (coords: Coordinates): Coordinates => {
-		const contextMenuWidth = this.element.offsetWidth;
-		const contextMenuHeight = this.element.offsetHeight;
+		const contextMenuWidth = this.component.offsetWidth;
+		const contextMenuHeight = this.component.offsetHeight;
 		
 		const browserWindowWidth = window.innerWidth;
 		const windowHeight = window.innerHeight;
@@ -79,18 +80,18 @@ class ContextMenu {
 		return { x, y }
 	}
 	
-	private setPosition = (coords: Coordinates, element: HTMLElement = this.element) => {
+	private setPosition = (coords: Coordinates, component: HTMLElement = this.component) => {
 		const positionX = `${coords.x}px`;
 		const positionY = `${coords.y}px`;
 		
-		element.style.left = positionX;
-		element.style.top = positionY;
+		component.style.left = positionX;
+		component.style.top = positionY;
 	}
 	
 	private addPictureElement = () => {
-		const pictureElement = new PictureElement(this.coords);
-		this.elementStorage.addElement(pictureElement);
-		const image = pictureElement.getElement();
+		const pictureComponent = new PictureComponent(this.coords);
+		this.componentStorage.addElement(pictureComponent);
+		const image = pictureComponent.getComponent();
 		this.root.append(image);
 		this.setPosition(this.coords, image);
 	}
@@ -100,9 +101,9 @@ class ContextMenu {
 	}
 	
 	private addTextElement = () => {
-		const textElement = new TextElement(this.coords);
-		this.elementStorage.addElement(textElement);
-		const text = textElement.getElement();
+		const textComponent = new TextComponent(this.coords);
+		this.componentStorage.addElement(textComponent);
+		const text = textComponent.getComponent();
 		this.root.append(text);
 		this.setPosition(this.coords, text);
 	}

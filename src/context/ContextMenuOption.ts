@@ -1,17 +1,17 @@
 
 class ContextMenuOption {
 	
-	private readonly element: HTMLElement
+	private readonly component: HTMLElement
 	private readonly postClickEvents: (() => void)[];
 	
 	constructor (buttonText: string) {
-		this.element = document.createElement('div');
+		this.component = document.createElement('div');
 		this.postClickEvents=[];
-		this.element.textContent = buttonText;
-		this.element.addEventListener('click', this.onElementClick);
+		this.component.textContent = buttonText;
+		this.component.addEventListener('click', this.onElementClick);
 	}
 	
-	public getElement = () => this.element;
+	public getElement = () => this.component;
 	
 	public addPostClickEvent = (event: () => void) => {
 		this.postClickEvents.push(event);

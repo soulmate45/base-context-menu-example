@@ -1,7 +1,7 @@
 import './style.css'
 import ContextMenu from './context/ContextMenu.ts';
 
-const contextMenu = new ContextMenu({rootElement: document.body});
+const contextMenu = new ContextMenu({rootComponent: document.body});
 
 const onRightClick = (ev: MouseEvent) => {
 	ev.preventDefault();
