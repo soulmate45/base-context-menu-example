@@ -1,4 +1,4 @@
-import Coordinates from '../Coordinates';
+import Coordinates from '../interfaces/Coordinates.ts';
 import Component from './Component.ts';
 import '../../styles/context-menu/__text-component.scss';
 

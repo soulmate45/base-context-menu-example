@@ -5,7 +5,7 @@ const contextMenu = new ContextMenu({rootComponent: document.body});
 
 const onRightClick = (ev: MouseEvent) => {
 	ev.preventDefault();
-	contextMenu.open({ x: ev.clientX, y: ev.clientY });
+	contextMenu.open({ x: ev.clientX, y: ev.clientY }, ev.target as HTMLElement);
 };
 
 const onLeftClick = (ev: MouseEvent) => {

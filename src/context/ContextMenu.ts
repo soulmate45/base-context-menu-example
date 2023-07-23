@@ -1,10 +1,9 @@
 import ContextMenuOption from './ContextMenuOption.ts';
-import Coordinates from './Coordinates.ts';
-import PictureComponent from './components/PictureComponent.ts';
-import TextComponent from './components/TextComponent.ts';
+import Coordinates from './interfaces/Coordinates.ts';
 import ComponentStorage from './components/ComponentStorage.ts';
-import '../styles/context-menu/__context-menu-frame.scss';
 import HTMLGenerator from './HTMLGenerator.ts';
+import Injector from './injector/Injector.ts';
+import '../styles/context-menu/__context-menu-frame.scss';
 
 interface ContextMenuProps {
 	rootComponent: HTMLElement,
@@ -22,8 +21,8 @@ class ContextMenu {
 	private readonly windowAddImageOption: ContextMenuOption;
 	private readonly windowAddTextOption: ContextMenuOption;
 	private readonly windowDeleteImageOption: ContextMenuOption;
-	// private readonly windowDeleteTextOption: ContextMenuOption;
 	private readonly componentStorage: ComponentStorage;
+	private readonly injector: Injector;
 	private coords: Coordinates;
 	
 	
@@ -31,6 +30,7 @@ class ContextMenu {
 		this.component = HTMLGenerator.getDiv();
 		this.component.className = this.COMPONENT_CLASS_NAME;
 		this.componentStorage = new ComponentStorage();
+		this.injector = new Injector();
 		this.root = props.rootComponent;
 		this.coords = { x: 0, y: 0 };
 		
@@ -50,8 +50,15 @@ class ContextMenu {
 		);
 	}
 
-	public open = (coordsOutput: Coordinates) => {
+	public open = (coordsOutput: Coordinates, targetComponent: HTMLElement) => {
 		this.coords = coordsOutput;
+		
+		if (targetComponent.tagName === 'img' || targetComponent.classList.contains('text')) {
+			this.windowDeleteImageOption.show();
+		} else {
+			this.windowDeleteImageOption.hide();
+		}
+		
 		this.root.append(this.component);
 		
 		const position = this.coordinateSearch(coordsOutput);
@@ -82,19 +89,13 @@ class ContextMenu {
 	}
 	
 	private setPosition = (coords: Coordinates, component: HTMLElement = this.component) => {
-		const positionX = `${coords.x}px`;
-		const positionY = `${coords.y}px`;
-		
-		component.style.left = positionX;
-		component.style.top = positionY;
+		component.style.top = `${coords.y}px`;
+		component.style.left =`${coords.x}px`;
 	}
 	
 	private addPictureComponent = () => {
-		const pictureComponent = new PictureComponent(this.coords);
-		this.componentStorage.addElement(pictureComponent);
-		const image = pictureComponent.getComponent();
+		const image = this.injector.injectImage(this.coords);
 		this.root.append(image);
-		this.setPosition(this.coords, image);
 	}
 	
 	private onAddImageClick = () => {
@@ -102,32 +103,17 @@ class ContextMenu {
 	}
 	
 	private addTextComponent = () => {
-		const textComponent = new TextComponent(this.coords);
-		this.componentStorage.addElement(textComponent);
-		const text = textComponent.getComponent();
+		const text = this.injector.injectText(this.coords);
 		this.root.append(text);
-		this.setPosition(this.coords, text);
 	}
 	
 	private onAddTextClick = () => {
 		this.addTextComponent();
 	}
 	
-	private deleteImageElement = () => {
-	
-	}
-	
 	private onDeleteImageClick = () => {
-		this.deleteImageElement();
+		this.componentStorage.deleteComponentAt(this.coords);
 	}
-	
-	// private deleteTextElement = () => {
-	//
-	// }
-	
-	// private onDeleteTextClick = () => {
-	// 	this.deleteTextElement();
-	// }
 	
 }
 

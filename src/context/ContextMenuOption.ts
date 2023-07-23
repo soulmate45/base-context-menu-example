@@ -22,6 +22,15 @@ class ContextMenuOption {
 			element();
 		});
 	}
+	
+	public show() {
+		this.component.style.display = 'block';
+	}
+	
+	public hide() {
+		this.component.style.display = 'none';
+	}
+	
 }
 
 export default ContextMenuOption;
