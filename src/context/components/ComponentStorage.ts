@@ -12,7 +12,7 @@ class ComponentStorage {
 		this.componentStorage.push(component)
 	}
 	
-	public deleteComponentAt(coords: Coordinates) {
+	public deleteComponentAt = (coords: Coordinates) => {
 		for (let i = 0; i < this.componentStorage.length; i++) {
 			const component = this.componentStorage[i];
 			const rect = component.getRect();
@@ -22,6 +22,17 @@ class ComponentStorage {
 				break;
 			}
 		}
+	}
+	
+	public componentSearch = (coords: Coordinates): Component | undefined => {
+		for (let i = 0; i < this.componentStorage.length; i++) {
+			const component = this.componentStorage[i];
+			const rect = component.getRect();
+			if (coords.x >= rect.left && coords.x <= rect.right && coords.y >= rect.top && coords.y <= rect.bottom) {
+				return component;
+			}
+		}
+		return undefined;
 	}
 }
 

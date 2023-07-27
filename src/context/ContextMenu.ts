@@ -7,6 +7,8 @@ import '../styles/context-menu/__context-menu-frame.scss';
 
 interface ContextMenuProps {
 	rootComponent: HTMLElement,
+	componentStorage: ComponentStorage,
+	injector: Injector,
 }
 
 class ContextMenu {
@@ -14,7 +16,7 @@ class ContextMenu {
 	private readonly ADD_TEXT_BUTTON = 'Добавить текст'
 	private readonly DELETE_BUTTON = 'Удалить';
 	
-	private readonly COMPONENT_CLASS_NAME = 'context-menu__frame';
+	private readonly COMPONENT_FRAME_CLASS_NAME = 'context-menu__frame';
 	
 	private readonly root: HTMLElement;
 	private readonly component: HTMLElement;
@@ -28,9 +30,9 @@ class ContextMenu {
 	
 	constructor(props: ContextMenuProps) {
 		this.component = HTMLGenerator.getDiv();
-		this.component.className = this.COMPONENT_CLASS_NAME;
-		this.componentStorage = new ComponentStorage();
-		this.injector = new Injector();
+		this.component.className = this.COMPONENT_FRAME_CLASS_NAME;
+		this.componentStorage = props.componentStorage;
+		this.injector = props.injector;
 		this.root = props.rootComponent;
 		this.coords = { x: 0, y: 0 };
 		
@@ -41,7 +43,7 @@ class ContextMenu {
 		this.windowAddTextOption.addPostClickEvent(this.onAddTextClick)
 		
 		this.windowDeleteImageOption = new ContextMenuOption(this.DELETE_BUTTON);
-		this.windowDeleteImageOption.addPostClickEvent(this.onDeleteImageClick);
+		this.windowDeleteImageOption.addPostClickEvent(this.onDeleteClick);
 		
 		this.component.append(
 			this.windowAddImageOption.getComponent(),
@@ -53,7 +55,7 @@ class ContextMenu {
 	public open = (coordsOutput: Coordinates, targetComponent: HTMLElement) => {
 		this.coords = coordsOutput;
 		
-		if (targetComponent.tagName === 'img' || targetComponent.classList.contains('text')) {
+		if (targetComponent.tagName === 'IMG' || targetComponent.classList.contains('context-menu__text-component')) {
 			this.windowDeleteImageOption.show();
 		} else {
 			this.windowDeleteImageOption.hide();
@@ -62,7 +64,7 @@ class ContextMenu {
 		this.root.append(this.component);
 		
 		const position = this.coordinateSearch(coordsOutput);
-		this.setPosition(position);
+		this.setPositionMenu(position);
 	}
 	
 	public close = () => {
@@ -88,7 +90,7 @@ class ContextMenu {
 		return { x, y }
 	}
 	
-	private setPosition = (coords: Coordinates, component: HTMLElement = this.component) => {
+	private setPositionMenu = (coords: Coordinates, component: HTMLElement = this.component) => {
 		component.style.top = `${coords.y}px`;
 		component.style.left =`${coords.x}px`;
 	}
@@ -111,8 +113,12 @@ class ContextMenu {
 		this.addTextComponent();
 	}
 	
-	private onDeleteImageClick = () => {
+	private deleteComponentClick = () => {
 		this.componentStorage.deleteComponentAt(this.coords);
+	}
+	
+	private onDeleteClick = () => {
+		this.deleteComponentClick();
 	}
 	
 }

@@ -4,10 +4,22 @@
 	position: absolute;
 	padding: 14px;
 	background-color: $primary-context-menu_background;
-	border-radius: 10px;
-	cursor: pointer;
+	border-radius: 8px;
 	border: 1px solid $context-menu_border;
 	z-index: 10;
 	left: -50px;
 	user-select: none;
 }
+
+.context-menu__frame div {
+	color: $text-primary;
+	cursor: pointer;
+	padding: 8px;
+	user-select: none;
+}
+
+.context-menu__frame div:hover {
+	background-color: $secondary-context-menu_background;
+	border-radius: 6px;
+}
+

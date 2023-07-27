@@ -3,29 +3,29 @@ import Coordinates from '../interfaces/Coordinates.ts';
 import Factory from './factory/Factory.ts';
 
 class Injector {
-	protected readonly componentStorage = new ComponentStorage();
+	private readonly componentStorage: ComponentStorage;
 	protected readonly factory = new Factory();
+	
+	constructor(componentStorage: ComponentStorage) {
+		this.componentStorage = componentStorage;
+	}
 	
 	public injectImage = (coords: Coordinates): HTMLElement => {
 		const picture = this.factory.imageFactory(coords);
 		this.componentStorage.addComponent(picture);
 		const image = picture.getComponent();
-		this.setPosition(coords, image)
+		picture.setPosition(coords, image)
 		return image;
 	}
 	
 	public injectText = (coords: Coordinates): HTMLElement  => {
-		const textElement = this.factory.textFactory(coords);
-		this.componentStorage.addComponent(textElement);
-		const text = textElement.getComponent();
-		this.setPosition(coords, text)
+		const textComponent = this.factory.textFactory(coords);
+		this.componentStorage.addComponent(textComponent);
+		const text = textComponent.getComponent();
+		textComponent.setPosition(coords, text)
 		return text;
 	}
 	
-	private setPosition = (coords: Coordinates, element: HTMLElement) =>{
-		element.style.top = `${coords.y}px`;
-		element.style.left =`${coords.x}px`;
-	}
 }
 
 export default Injector;

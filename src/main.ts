@@ -1,7 +1,13 @@
-import './style.css'
 import ContextMenu from './context/ContextMenu.ts';
+import ComponentStorage from './context/components/ComponentStorage.ts';
+import Injector from './context/injector/Injector.ts';
+import ComponentData from './context/componentMovement/ComponentData.ts';
+import './style.css'
 
-const contextMenu = new ContextMenu({rootComponent: document.body});
+const componentStorage = new ComponentStorage();
+const injector = new Injector(componentStorage);
+const componentData = new ComponentData();
+const contextMenu = new ContextMenu({rootComponent: document.body, componentStorage, injector});
 
 const onRightClick = (ev: MouseEvent) => {
 	ev.preventDefault();
@@ -13,5 +19,29 @@ const onLeftClick = (ev: MouseEvent) => {
 	contextMenu.close();
 };
 
+const onMouseMove = (ev: MouseEvent) => {
+	ev.preventDefault();
+	const coords = { x: ev.clientX, y: ev.clientY }
+	componentData.setCoordinates(coords);
+	componentData.callMoveComponent();
+};
+
+const onMouseDown = (ev: MouseEvent) => {
+	const coords = { x: ev.clientX, y: ev.clientY }
+	const component = componentStorage.componentSearch(coords);
+	if (component !== undefined) {
+		componentData.setComponent(component, coords);
+	}
+};
+
+const onMouseUp = (ev: MouseEvent) => {
+  ev.preventDefault();
+	componentData.end();
+};
+
 document.body.addEventListener('contextmenu', onRightClick);
-document.body.addEventListener('click', onLeftClick)
+document.body.addEventListener('click', onLeftClick);
+document.body.addEventListener('mousemove', onMouseMove);
+document.body.addEventListener('mousedown', onMouseDown);
+document.body.addEventListener('mouseup', onMouseUp);
+

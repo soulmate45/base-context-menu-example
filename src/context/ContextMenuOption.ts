@@ -1,11 +1,12 @@
+import HTMLGenerator from './HTMLGenerator.ts';
 
 class ContextMenuOption {
 	
-	private readonly component: HTMLElement
+	private readonly component: HTMLElement;
 	private readonly postClickEvents: (() => void)[];
 	
 	constructor (buttonText: string) {
-		this.component = document.createElement('div');
+		this.component = HTMLGenerator.getDiv();
 		this.postClickEvents=[];
 		this.component.textContent = buttonText;
 		this.component.addEventListener('click', this.onComponentClick);
