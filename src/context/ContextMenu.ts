@@ -1,5 +1,5 @@
 import ContextMenuOption from './ContextMenuOption.ts';
-import Coordinates from './interfaces/Coordinates.ts';
+import ICoordinates from './interfaces/ICoordinates.ts';
 import ComponentStorage from './components/ComponentStorage.ts';
 import HTMLGenerator from './HTMLGenerator.ts';
 import Injector from './injector/Injector.ts';
@@ -11,6 +11,12 @@ interface ContextMenuProps {
 	injector: Injector,
 }
 
+/** ------------------------------------------------------------------------
+ *     Главный класс контексного меню, который выполняет следующие задачи:
+ *     - появление меню в поставленных координатах;
+ *     - закрытие контекстного меню на левую кнопку мыши;
+ *     - создание кнопок и их функционала.
+ */
 class ContextMenu {
 	private readonly ADD_IMAGE_BUTTON = 'Добавить картинку';
 	private readonly ADD_TEXT_BUTTON = 'Добавить текст'
@@ -25,8 +31,7 @@ class ContextMenu {
 	private readonly windowDeleteImageOption: ContextMenuOption;
 	private readonly componentStorage: ComponentStorage;
 	private readonly injector: Injector;
-	private coords: Coordinates;
-	
+	private coords: ICoordinates;
 	
 	constructor(props: ContextMenuProps) {
 		this.component = HTMLGenerator.getDiv();
@@ -34,8 +39,11 @@ class ContextMenu {
 		this.componentStorage = props.componentStorage;
 		this.injector = props.injector;
 		this.root = props.rootComponent;
-		this.coords = { x: 0, y: 0 };
+		this.coords = {x: 0, y: 0};
 		
+		/** ----------------------------------------
+		 *     Создание кнопок в контекстном меню.
+		 */
 		this.windowAddImageOption = new ContextMenuOption(this.ADD_IMAGE_BUTTON);
 		this.windowAddImageOption.addPostClickEvent(this.onAddImageClick);
 		
@@ -51,10 +59,17 @@ class ContextMenu {
 			this.windowDeleteImageOption.getComponent(),
 		);
 	}
-
-	public open = (coordsOutput: Coordinates, targetComponent: HTMLElement) => {
+	
+	/** -----------------------------------------------------------
+	 *     Метод, который отвечает за появление контекстного меню.
+	 */
+	public open = (coordsOutput: ICoordinates, targetComponent: HTMLElement) => {
 		this.coords = coordsOutput;
 		
+		/** --------------------------------------------------------------------------------------------------
+		 *     Проверка для кнопки удаления, если вызов контекстного меню произошел не на созданном элементе,
+		 *     то кнопка удалить скрывается.
+		 */
 		if (targetComponent.tagName === 'IMG' || targetComponent.classList.contains('context-menu__text-component')) {
 			this.windowDeleteImageOption.show();
 		} else {
@@ -67,18 +82,25 @@ class ContextMenu {
 		this.setPositionMenu(position);
 	}
 	
+	/** ----------------------------------------------------------
+	 *     Метод, который отвечает за закрытие контекстного меню.
+	 */
 	public close = () => {
 		this.component.remove();
 	}
 	
-	private coordinateSearch = (coords: Coordinates): Coordinates => {
+	/** ------------------------------------------------------------------------
+	 *     Метод, который ищет координаты и задает ограничения, в виде области,
+	 *     в которой может открыться контекстное меню.
+	 */
+	private coordinateSearch = (coords: ICoordinates): ICoordinates => {
 		const contextMenuWidth = this.component.offsetWidth;
 		const contextMenuHeight = this.component.offsetHeight;
 		
 		const browserWindowWidth = window.innerWidth;
 		const windowHeight = window.innerHeight;
 		
-		let { x, y } = coords;
+		let {x, y} = coords;
 		
 		if (coords.x + contextMenuWidth > browserWindowWidth) {
 			x -= contextMenuWidth;
@@ -87,13 +109,20 @@ class ContextMenu {
 		if (coords.y + contextMenuHeight > windowHeight) {
 			y -= contextMenuHeight;
 		}
-		return { x, y }
+		return {x, y}
 	}
 	
-	private setPositionMenu = (coords: Coordinates, component: HTMLElement = this.component) => {
+	/** -----------------------------------------------------------
+	 *     Метод, который устанавливает позицию контекстного меню.
+	 */
+	private setPositionMenu = (coords: ICoordinates, component: HTMLElement = this.component) => {
 		component.style.top = `${coords.y}px`;
-		component.style.left =`${coords.x}px`;
+		component.style.left = `${coords.x}px`;
 	}
+	
+	/** ----------------------------------------------------------------------------------------------
+	 *     Следующие методы отвечают за функционал: добавление компонентов и их последующее удаление.
+	 */
 	
 	private addPictureComponent = () => {
 		const image = this.injector.injectImage(this.coords);

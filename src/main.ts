@@ -1,17 +1,17 @@
 import ContextMenu from './context/ContextMenu.ts';
 import ComponentStorage from './context/components/ComponentStorage.ts';
 import Injector from './context/injector/Injector.ts';
-import ComponentData from './context/componentMovement/ComponentData.ts';
+import ComponentManipulator from './context/components/ComponentManipulator.ts';
 import './style.css'
 
 const componentStorage = new ComponentStorage();
 const injector = new Injector(componentStorage);
-const componentData = new ComponentData();
+const componentData = new ComponentManipulator();
 const contextMenu = new ContextMenu({rootComponent: document.body, componentStorage, injector});
 
 const onRightClick = (ev: MouseEvent) => {
 	ev.preventDefault();
-	contextMenu.open({ x: ev.clientX, y: ev.clientY }, ev.target as HTMLElement);
+	contextMenu.open({x: ev.clientX, y: ev.clientY}, ev.target as HTMLElement);
 };
 
 const onLeftClick = (ev: MouseEvent) => {
@@ -21,13 +21,13 @@ const onLeftClick = (ev: MouseEvent) => {
 
 const onMouseMove = (ev: MouseEvent) => {
 	ev.preventDefault();
-	const coords = { x: ev.clientX, y: ev.clientY }
+	const coords = {x: ev.clientX, y: ev.clientY}
 	componentData.setCoordinates(coords);
 	componentData.callMoveComponent();
 };
 
 const onMouseDown = (ev: MouseEvent) => {
-	const coords = { x: ev.clientX, y: ev.clientY }
+	const coords = {x: ev.clientX, y: ev.clientY}
 	const component = componentStorage.componentSearch(coords);
 	if (component !== undefined) {
 		componentData.setComponent(component, coords);
@@ -35,8 +35,8 @@ const onMouseDown = (ev: MouseEvent) => {
 };
 
 const onMouseUp = (ev: MouseEvent) => {
-  ev.preventDefault();
-	componentData.end();
+	ev.preventDefault();
+	componentData.stop();
 };
 
 document.body.addEventListener('contextmenu', onRightClick);

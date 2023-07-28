@@ -1,4 +1,3 @@
-
 import Component from './Component.ts';
 import '../../styles/context-menu/__text-component.scss';
 
@@ -10,7 +9,7 @@ class TextComponent extends Component {
 		super();
 		this.component.textContent = this.COMPONENT_TEXT_CONTENT;
 		this.component.className = this.COMPONENT_CLASS_NAME;
-	}
+	};
 }
 
 export default TextComponent;
